@@ -23,3 +23,25 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+import enum
+
+__all__ = {"UserTypes", "BroadcasterTypes"}
+
+
+class UserTypes(enum.Enum):
+    """The different types of users."""
+    USER = ''
+    GLOBAL_MOD = 'global_mod'
+    ADMIN = 'admin'
+    STAFF = 'staff'
+    
+    # Aliases #
+    GLOBAL_MODERATOR = GLOBAL_MOD
+    ADMINISTRATOR = ADMIN
+
+
+class BroadcasterTypes(enum.Enum):
+    """The different types of broadcasters."""
+    NONE = ''
+    AFFILIATE = 'affiliate'
+    PARTNER = 'partner'

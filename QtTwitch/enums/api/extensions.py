@@ -23,3 +23,14 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+import enum
+
+__all__ = {"ExtensionTypes"}
+
+
+class ExtensionTypes(enum.Enum):
+    """The different types of extensions."""
+    COMPONENT = 'component'
+    MOBILE = 'mobile'
+    PANEL = 'panel'
+    OVERLAY = 'overlay'

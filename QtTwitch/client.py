@@ -21,55 +21,30 @@
 # the GNU General Public License along
 # with QtTwitch.
 # If not, see <http://www.gnu.org/licenses/>.
-import random
 
 from PyQt5 import QtCore
 
-from .dataclasses.qmessage import QMessage
-from .irc import IRC
+from .irc import ManagedConnection
 
 
 class Client(QtCore.QObject):
-    on_raw_message = QtCore.pyqtSignal(object)
+    """A client for connecting to Twitch's servers."""
+    on_message = QtCore.pyqtSignal()
     
     def __init__(self, **kwargs):
-        # Super Class #
+        # Super Call #
         super(Client, self).__init__(parent=kwargs.get("parent"))
-        
-        # "Internal" Attributes #
-        self._irc_connection = IRC(kwargs.get("nick", "justinfan123"), kwargs.get("token", "foobar"), parent=self)
+    
+        # "Private" Attributes #
+        self._irc = ManagedConnection(username=kwargs.get("username"), token=kwargs.get("token"), parent=self)
         
         # Internal Calls #
-        self._irc_connection.on_message.connect(self.on_raw_message.emit)
+        self._irc.on_message.connect(self.on_message)
     
-    def disconnect(self):
-        pass
+        # Aliases #
+        self.connect = self._irc.connect
+        self.disconnect = self._irc.disconnect
+        self.join = self._irc.join
+        self.part = self._irc.part
     
-    def login(self, login: str = None, token: str = None):
-        """Sets the credentials for the IRC connection."""
-        if login is None or token is None:
-            login = "justinfan{}".format(str(random.randint(9999)))
-            token = None
-        
-        self._irc_connection.set_credentials(login, token)
-    
-    def logout(self):
-        pass
-    
-    def connect(self):
-        """Connects to Twitch's IRC servers."""
-        self._irc_connection.connect()
-    
-    def connect_and_login(self, login: str = None, token: str = None):
-        """Connects to Twitch's IRC servers and logs in with
-        the provided credentials."""
-        self.login(login, token)
-        self.connect()
-    
-    def join(self, channel: str):
-        """Tells the IRC connection to join a channel."""
-        self._irc_connection.set_channel(channel)
-    
-    def part(self):
-        """Tells the IRC connection to leave the current channel."""
-        self._irc_connection.set_channel(None)
+        self.qdisconnect = super(Client, self).disconnect

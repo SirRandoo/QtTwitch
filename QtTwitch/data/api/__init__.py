@@ -23,3 +23,8 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+from .cheermote import Cheermote
+from .emoticon import Emoticon
+from .game import Game
+from .stream import Stream
+from .user import User

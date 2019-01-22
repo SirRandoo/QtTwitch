@@ -1,37 +1,35 @@
 # This file is part of QtTwitch.
 #
-# QtTwitch is free software: you can
-# redistribute it and/or modify it
-# under the terms of the GNU Lesser
-# General Public License as published
-# by the Free Software Foundation,
-# either version 3 of the License, or
-# (at your option) any later version.
+# QtTwitch is free software:
+# you can redistribute it
+# and/or modify it under the
+# terms of the GNU Lesser General
+# Public License as published by
+# the Free Software Foundation,
+# either version 3 of the License,
+# or (at your option) any later
+# version.
 #
-# QtTwitch is distributed in the hope
-# that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the
-# implied warranty of MERCHANTABILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.
-# See the GNU Lesser General Public
-# License for more details.
+# QtTwitch is distributed in
+# the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without
+# even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more
+# details.
 #
-# You should have received a copy of
-# the GNU Lesser General Public License
-# along with QtTwitch.  If not, see
-# <http://www.gnu.org/licenses/>.
-#
-# Author: RandomShovel
-# File Date: 11/15/2017
+# You should have received a copy of the
+# GNU Lesser General Public License along
+# with QtTwitch.  If not,
+# see <https://www.gnu.org/licenses/>.
+import time
 import typing
 
-import time
+__all__ = {"CachedMethod"}
 
 
-__all__ = {"AugmentedMethod"}
-    
-
-class AugmentedMethod(object):
+class CachedMethod:
     """A descriptor class mostly used for ratelimiting
     Twitch API calls.  Callables decorated with this
     class allow the callable to be called once every
@@ -56,8 +54,8 @@ class AugmentedMethod(object):
     
     def thaw(self):
         self._last_use = 0
-    
-    def is_frozen(self):
+
+    def is_frozen(self) -> bool:
         return (self._last_use - time.time()) < self._cooldown
     
     def __call__(self, f: typing.Callable):

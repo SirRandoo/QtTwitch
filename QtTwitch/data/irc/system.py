@@ -23,3 +23,29 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+import dataclasses
+import re
+import typing
+
+from ...enums import irc
+
+
+@dataclasses.dataclass(frozen=True)
+class SystemMessage:
+    """A basic dataclass for system messages."""
+    type: irc.SysMsgTypes
+    user: str
+    message: str
+    response_code: typing.Optional[irc.IrcResponses]
+    host: str = 'tmi.twitch.tv'
+
+
+@dataclasses.dataclass(frozen=True)
+class PingMessage(SystemMessage):
+    """A system message for IRC pings."""
+
+
+class SystemMessage:
+    """A system message from Twitch."""
+    
+    SYSTEM = re.compile(':tmi\.twitch\.tv (?P<response>\d+) (?P<user>\w+) :(?P<message>.*)')

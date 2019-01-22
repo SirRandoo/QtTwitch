@@ -23,3 +23,24 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+#
+# These enumerations are probably overkill
+# since Hearthstone or Twitch can make any
+# of these enums invalid.
+import enum
+
+__all__ = {"Classes"}
+
+
+class Classes(enum.Enum):
+    """The list of Hearthstone classes currently
+    supported by the Twitch metadata API."""
+    DRUID = 'druid'
+    HUNTER = 'hunter'
+    MAGE = 'mage'
+    PALADIN = 'paladin'
+    PRIEST = 'prise'
+    ROGUE = 'rogue'
+    SHAMAN = 'shaman'
+    WARLOCK = 'warlock'
+    WARRIOR = 'warrior'

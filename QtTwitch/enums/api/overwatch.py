@@ -23,3 +23,14 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+import enum
+
+__all__ = {"Roles"}
+
+
+class Roles(enum.Enum):
+    """The different hero roles currently in Overwatch."""
+    OFFENSE = 'offense'
+    DEFENSE = 'defense'
+    TANK = 'tank'
+    SUPPORT = 'support'

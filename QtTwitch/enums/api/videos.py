@@ -23,3 +23,19 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+import enum
+
+__all__ = {"VideoTypes", "VideoVisibilities"}
+
+
+class VideoTypes(enum.Enum):
+    """The different types of videos."""
+    UPLOAD = 'upload'
+    HIGHLIGHT = 'highlight'
+    ARCHIVE = 'archive'
+
+
+class VideoVisibilities(enum.Enum):
+    """The different types of video visibilities."""
+    PUBLIC = 'public'
+    PRIVATE = 'private'

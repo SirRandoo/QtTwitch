@@ -21,6 +21,7 @@
 # the GNU General Public License along
 # with QtTwitch.
 # If not, see <http://www.gnu.org/licenses/>.
+# TODO: Fix Client
 
 from PyQt5 import QtCore
 

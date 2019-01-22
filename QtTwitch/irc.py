@@ -426,7 +426,11 @@ class IrcConnection(QtCore.QObject):
                     pass
         
         elif isinstance(message, PrivateMessage):
-            pass
+            logger.warning("Received PrivateMessage instance; this shouldn't have happened!")
+            self.process_message(message)
+
+        else:
+            raise ValueError(f'Cannot process message type {message.__class__.__name__}!')
     
     # Ratelimit Methods #
     # It's best not to call these methods directly

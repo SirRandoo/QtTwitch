@@ -33,27 +33,25 @@ import typing
 from PyQt5 import QtCore, QtWebSockets
 
 from QtUtilities import signals
-from data.irc.privmsg import PrivateMessage
+from ..data.irc import PrivateMessage
 
 logger = logging.getLogger(__name__)
 
-__all__ = {"IrcConnection"}
+__all__ = {"Gateway"}
 
 
-class IrcConnection(QtCore.QObject):
+class Gateway(QtCore.QObject):
     """A class for interacting with Twitch's IRC servers."""
-    
-    # Signals #
-    on_message = QtCore.pyqtSignal(object)  # QMessage
-    on_raw_message = QtCore.pyqtSignal(str)
-    
+
+    # Signals
+    on_ping = QtCore.pyqtSignal()
     on_priv_limit_reset = QtCore.pyqtSignal()
     on_join_limit_reset = QtCore.pyqtSignal()
     on_whisper_second_reset = QtCore.pyqtSignal()
     on_whisper_minute_reset = QtCore.pyqtSignal()
     on_whisper_account_reset = QtCore.pyqtSignal()
-    
-    on_ping = QtCore.pyqtSignal()
+
+    on_message = QtCore.pyqtSignal(str)
     on_user_join = QtCore.pyqtSignal(str, str)  # Channel, user login
     on_user_part = QtCore.pyqtSignal(str, str)  # Channel, user login
     on_user_modded = QtCore.pyqtSignal(str, str)  # Channel, user login
@@ -79,7 +77,7 @@ class IrcConnection(QtCore.QObject):
         :param whisper_reset: The moment the account limit gets reset.
         """
         # Super Call #
-        super(IrcConnection, self).__init__(parent=kwargs.get('parent'))
+        super(Gateway, self).__init__(parent=kwargs.get('parent'))
         
         # "Public" Attributes #
         self.channels: typing.List[str] = []
@@ -135,8 +133,8 @@ class IrcConnection(QtCore.QObject):
         self._socket.connected.connect(self.process_connection)
         self._socket.disconnected.connect(self.process_disconnection)
         self._socket.textMessageReceived.connect(self.process_message)
-        
-        self.qt_disconnect = super(IrcConnection, self).disconnect
+
+        self.qt_disconnect = super(Gateway, self).disconnect
         
         # Validation #
         if self._token != "foobar" and not self._token.startswith("oauth"):
@@ -177,8 +175,9 @@ class IrcConnection(QtCore.QObject):
     
     def join(self, channel: str):
         """Joins a channel on Twitch."""
+        self.send_raw_message(f'JOIN #{channel}')
+
         if channel not in self.channels:
-            self.send_raw_message(f'JOIN #{channel}')
             self.channels.append(channel)
     
     def part(self, channel: str):
@@ -333,6 +332,9 @@ class IrcConnection(QtCore.QObject):
                 signals.wait_for_signal(self._socket.connected, timeout=max(self._reconnect_attempts * 5, 1))
                 
                 self._reconnect_attempts += 1
+
+    def process_errors(self, error: int):
+        """Processes any errors the gateway may have."""
     
     # Message Methods #
     def send_raw_message(self, content: str, *, ignore_limit: bool = None):
@@ -349,8 +351,8 @@ class IrcConnection(QtCore.QObject):
         
         if not content.endswith('\r\n'):
             content += '\r\n'
-        
-        self._socket.sendTextMessage(content)
+
+        print('Sent ', self._socket.sendTextMessage(content), ' bytes', f'({content.strip()})')
     
     def send_priv_message(self, channel: str, content: str):
         """Sends a PRIVMSG to Twitch's IRC servers."""
@@ -373,7 +375,7 @@ class IrcConnection(QtCore.QObject):
         """Processes a message presumably from Twitch."""
         if isinstance(message, str):
             user_meta = f'{self._nick}!{self._nick}@{self._nick}.tmi.twitch.tv'
-            self.on_raw_message.emit(message)
+            self.on_message.emit(message)
             
             # Since we're not entirely sure how we want to go about parsing IRC
             # messages, we'll just do it this way.  Eventually we'll want to

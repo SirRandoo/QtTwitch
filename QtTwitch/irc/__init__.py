@@ -23,3 +23,4 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+from .gateway import Gateway

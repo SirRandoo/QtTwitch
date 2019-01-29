@@ -181,8 +181,9 @@ class Gateway(QtCore.QObject):
     
     def part(self, channel: str):
         """Leaves a channel."""
+        self.send_raw_message(f'PART #{channel}')
+
         if channel in self.channels:
-            self.send_raw_message(f'PART #{channel}')
             self.channels.remove(channel)
     
     def slow(self, channel: str, limit: int = None):
@@ -397,13 +398,13 @@ class Gateway(QtCore.QObject):
                     self.channels.remove(channel)
             
             elif message.startswith(':jtv MODE'):
-                status, user = message.split(' ')[-2:]
+                *_, channel, status, user = message.split(' ')
                 
                 if status == '+o':
-                    self.on_user_modded.emit(user)
+                    self.on_user_modded.emit(channel, user)
                 
                 elif status == '-o':
-                    self.on_user_unmodded.emit(user)
+                    self.on_user_unmodded.emit(channel, user)
             
             elif message.startswith(':tmi.twitch.tv CLEARCHAT'):
                 partial = message.replace(':tmi.twitch.tv CLEARCHAT #', '')

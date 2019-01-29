@@ -44,7 +44,6 @@ class Gateway(QtCore.QObject):
     """A class for interacting with Twitch's IRC servers."""
 
     # Signals
-    on_ping = QtCore.pyqtSignal()
     on_priv_limit_reset = QtCore.pyqtSignal()
     on_join_limit_reset = QtCore.pyqtSignal()
     on_whisper_second_reset = QtCore.pyqtSignal()

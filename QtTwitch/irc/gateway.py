@@ -113,7 +113,7 @@ class Gateway(QtCore.QObject):
         
         self._join_sent: int = 0
         self._join_limit: int = 50
-        self._join_period: int = 10  # Seconds
+        self._join_period: int = 15  # Seconds
         
         self._whispers_this_second: int = 0  # Whispers sent this second
         self._whispers_this_minute: int = 0  # Whispers sent this minute

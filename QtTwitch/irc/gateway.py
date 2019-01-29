@@ -352,7 +352,7 @@ class Gateway(QtCore.QObject):
         if not content.endswith('\r\n'):
             content += '\r\n'
 
-        print('Sent ', self._socket.sendTextMessage(content), ' bytes', f'({content.strip()})')
+        self._socket.sendTextMessage(content)
     
     def send_priv_message(self, channel: str, content: str):
         """Sends a PRIVMSG to Twitch's IRC servers."""

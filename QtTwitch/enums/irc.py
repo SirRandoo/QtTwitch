@@ -39,6 +39,53 @@ class UserTypes(enum.Enum):
     GLOBAL_MODERATOR = GLOBAL_MOD
 
 
+class BadgeTypes(enum.Enum):
+    ADMIN = 'admin'
+    BITS = 'bits'
+    BROADCASTER = 'broadcaster'
+    GLOBAL_MOD = 'global_mod'
+    MODERATOR = 'moderator'
+    SUBSCRIBER = 'subscriber'
+    STAFF = 'staff'
+    TURBO = 'turbo'
+    PREMIUM = 'premium'
+    CHARITY = 'bits-charity'
+    VIP = 'vip'
+    LEADER = 'bits-leader'
+    
+    # Alias
+    GLOBAL_MODERATOR = GLOBAL_MOD
+    MOD = MODERATOR
+    SUB = SUBSCRIBER
+    PRIME = PREMIUM
+
+
+class MsgIds(enum.Enum):
+    """The various message ids Twitch can send."""
+    SUB = 'sub'
+    RESUB = 'resub'
+    SUB_GIFT = 'subgift'
+    ANON_SUB_GIFT = 'anonsubgift'
+    RAID = 'raid'
+    RITUAL = 'ritual'
+    
+    # Aliases
+    ANONYMOUS_SUB_GIFT = ANON_SUB_GIFT
+    ANONYMOUS_SUBSCRIBER_GIFT = ANON_SUB_GIFT
+    
+    SUBSCRIBER = SUB
+    SUBSCRIBER_GIFT = SUB_GIFT
+    RESUBSCRIBER = RESUB
+
+
+class SubPlans(enum.Enum):
+    """The various sub plans."""
+    PRIME = 'Prime'
+    FIRST = 1000
+    SECOND = 2000
+    THIRD = 3000
+
+
 class SysMsgTypes(enum.Enum):
     """The various system messages Twitch can send."""
     GENERIC = enum.auto()  # Generic IRC spec responses

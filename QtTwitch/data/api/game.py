@@ -23,38 +23,21 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
-from PyQt5 import QtCore, QtGui
+import dataclasses
+
+from PyQt5 import QtCore
+
+__all__ = ['Game']
 
 
+@dataclasses.dataclass(frozen=True)
 class Game:
     """A game on Twitch."""
-    
-    def __init__(self, **kwargs):
-        self._box_art_template: str = kwargs.get("box_art_url")
-        self._id: str = kwargs.get("id")
-        self._name: str = kwargs.get("name")
-    
-    # Properties #
-    @property
-    def id(self) -> str:
-        """The Twitch ID of the game."""
-        return self._id
-    
-    @property
-    def name(self) -> str:
-        """The name of the game."""
-        return self._name
+    id: str
+    name: str
+    url: str
     
     # Asset Methods #
     def box_art_url(self, width: int = None, height: int = None) -> QtCore.QUrl:
         """Returns the url to the box art for this game."""
-        if width is None:
-            width = 128
-        
-        if height is None:
-            height = 256
-        
-        return QtCore.QUrl(self._box_art_template.format(width=width, height=height))
-    
-    def box_art(self, width: int = None, height: int = None) -> QtGui.QImage:
-        """Returns a QImage of the box art."""
+        return QtCore.QUrl(self.url.format(width=width or 128, height=height or 256))

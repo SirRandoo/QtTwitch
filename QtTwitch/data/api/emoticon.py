@@ -23,19 +23,21 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+import dataclasses
+import typing
+
 from PyQt5 import QtCore
 
+__all__ = ['Emoticon']
 
+
+@dataclasses.dataclass(frozen=True)
 class Emoticon(QtCore.QObject):
     """Represents an emoticon from Twitch."""
-    
-    def __init__(self, state, **kwargs):
-        # Super Call #
-        super(Emoticon, self).__init__(parent=kwargs.get('parent'))
-        
-        # "Private" Attributes #
-        self._state = state
-        
-        self._id: str = kwargs.pop('id')
-        self._code: str = kwargs.pop('code')
-        self._set: str = kwargs.get('emote_set')
+    state: typing.Any
+    id: int
+    code: str
+    set: int
+
+    def __post_init__(self):
+        super(Emoticon, self).__init__()

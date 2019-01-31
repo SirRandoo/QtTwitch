@@ -25,6 +25,9 @@
 # see <https://www.gnu.org/licenses/>.
 from setuptools import setup
 
+with open('requirements.txt') as INFILE:
+    req = INFILE.readlines()
+
 setup(
     name='QtTwitch',
     version='0.1.0a',
@@ -33,5 +36,6 @@ setup(
     license='LGPLv3+',
     author='SirRandoo',
     author_email='',
-    description='A PyQt5 library for Twitch.', install_requires=['PyQt5', 'python-dateutil']
+    description='A PyQt5 library for Twitch.',
+    install_requires=req
 )

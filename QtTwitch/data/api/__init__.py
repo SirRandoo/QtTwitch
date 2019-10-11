@@ -23,13 +23,8 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
-
-
-class TwitchError(Exception):
-    """A generic Twitch related error."""
-
-
-class ChannelError(TwitchError):
-    """Raised when the client attempts to perform an action on a channel.  This
-    can be raised if the client is attempting to join a channel it's already in,
-    or leave a channel it is not in."""
+from .cheermote import Cheermote
+from .emoticon import Emoticon
+from .game import Game
+from .stream import Stream
+from .user import User

@@ -23,13 +23,16 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+import dataclasses
+
+from PyQt5 import QtCore
+
+__all__ = ['Emoticon']
 
 
-class TwitchError(Exception):
-    """A generic Twitch related error."""
-
-
-class ChannelError(TwitchError):
-    """Raised when the client attempts to perform an action on a channel.  This
-    can be raised if the client is attempting to join a channel it's already in,
-    or leave a channel it is not in."""
+@dataclasses.dataclass(frozen=True)
+class Emoticon(QtCore.QObject):
+    """Represents an emoticon from Twitch."""
+    id: int
+    code: str
+    set: int

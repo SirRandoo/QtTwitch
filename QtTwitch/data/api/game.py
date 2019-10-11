@@ -23,13 +23,21 @@
 # GNU Lesser General Public License along
 # with QtTwitch.  If not,
 # see <https://www.gnu.org/licenses/>.
+import dataclasses
+
+from PyQt5 import QtCore
+
+__all__ = ['Game']
 
 
-class TwitchError(Exception):
-    """A generic Twitch related error."""
-
-
-class ChannelError(TwitchError):
-    """Raised when the client attempts to perform an action on a channel.  This
-    can be raised if the client is attempting to join a channel it's already in,
-    or leave a channel it is not in."""
+@dataclasses.dataclass(frozen=True)
+class Game:
+    """A game on Twitch."""
+    id: str
+    name: str
+    url: str
+    
+    # Asset Methods #
+    def box_art_url(self, width: int = None, height: int = None) -> QtCore.QUrl:
+        """Returns the url to the box art for this game."""
+        return QtCore.QUrl(self.url.format(width=width or 128, height=height or 256))

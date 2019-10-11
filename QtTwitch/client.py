@@ -21,55 +21,73 @@
 # the GNU General Public License along
 # with QtTwitch.
 # If not, see <http://www.gnu.org/licenses/>.
-import random
+# TODO: Fix Client
+import logging
+import typing
 
 from PyQt5 import QtCore
 
-from .dataclasses.qmessage import QMessage
-from .irc import IRC
+from . import dataclasses as dataklasses
+from .gateway import Gateway
+from .http import Http
+from .parser import Parser
+
+__all__ = ['Client']
+
+logger = logging.getLogger(__name__)
 
 
 class Client(QtCore.QObject):
-    on_raw_message = QtCore.pyqtSignal(object)
+    """A client for connecting to Twitch's servers."""
+    # Signals
+    on_message = QtCore.pyqtSignal(object)
     
     def __init__(self, **kwargs):
-        # Super Class #
-        super(Client, self).__init__(parent=kwargs.get("parent"))
+        """
+        :param username: The username to use for authenticating to Twitch's IRC
+                         servers.  If no username is provided, the client will
+                         log in anonymously.
+        :param token: The OAuth token to use for authenticating to Twitch's IRC
+                      servers, and authenticated api requests.  If no token is
+                      provided, the client will log in anonymously, and
+                      authenticated requests will fail.
+        :param client_id: The client id to use for api requests.  If no client
+                          id is provided, api requests will probably fail.
+        :param factory: A QRequestFactory to use for api requests.  If one is
+                        not provided, a new one will be created.
+        :param parent: A QObject to act as this object's parent.  If no parent
+                       is provided, the client will have to be manually disposed
+                       of.
+        """
+    
+        # Super call
+        super(Client, self).__init__(parent=kwargs.get('parent'))
+    
+        # Public attributes
+        self.irc = Gateway(username=kwargs.get('username'), token=kwargs.get('token'), parent=self)
+        self.http = Http(client_id=kwargs.get('client_id'), token=kwargs.get('token'), factory=kwargs.get('factory'))
+        self.parser = Parser(self)
+    
+        self.channels: typing.List[dataklasses.Channel] = []
+        self.emotes: typing.Dict[str, typing.List[dataklasses.Emote]] = {}  # id: [emote, emote, ...]
+    
+        # Internal calls
+        self.stitch_signals()
+    
+    # Internal methods
+    def stitch_signals(self):
+        """Stitches the QObject signals to their respective slots."""
+        # Irc gateway signals
+        self.irc.on_message.connect(self.parse_message)
+    
+    # Message methods
+    def parse_message(self, message: str):
+        """Parses a raw IRC message."""
+        try:
+            message = self._parser.parse(message)
         
-        # "Internal" Attributes #
-        self._irc_connection = IRC(kwargs.get("nick", "justinfan123"), kwargs.get("token", "foobar"), parent=self)
+        except (ValueError, KeyError) as e:
+            logger.warning(f'Could not parse message "{message}"!  ({e.__class__.__name__}({e!s}))')
         
-        # Internal Calls #
-        self._irc_connection.on_message.connect(self.on_raw_message.emit)
-    
-    def disconnect(self):
-        pass
-    
-    def login(self, login: str = None, token: str = None):
-        """Sets the credentials for the IRC connection."""
-        if login is None or token is None:
-            login = "justinfan{}".format(str(random.randint(9999)))
-            token = None
-        
-        self._irc_connection.set_credentials(login, token)
-    
-    def logout(self):
-        pass
-    
-    def connect(self):
-        """Connects to Twitch's IRC servers."""
-        self._irc_connection.connect()
-    
-    def connect_and_login(self, login: str = None, token: str = None):
-        """Connects to Twitch's IRC servers and logs in with
-        the provided credentials."""
-        self.login(login, token)
-        self.connect()
-    
-    def join(self, channel: str):
-        """Tells the IRC connection to join a channel."""
-        self._irc_connection.set_channel(channel)
-    
-    def part(self):
-        """Tells the IRC connection to leave the current channel."""
-        self._irc_connection.set_channel(None)
+        else:
+            self.on_message.emit(message)

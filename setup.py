@@ -26,7 +26,11 @@ from setuptools import setup
 setup(
     name='QtTwitch',
     version='0.1.0a',
-    packages=['QtTwitch', 'QtTwitch.bases', 'QtTwitch.dataclasses', 'QtTwitch.enums'],
+    packages=[
+        'QtTwitch',
+        'QtTwitch.data',
+        'QtTwitch.data.api',
+    ],
     url='https://www.github.com/SirRandoo/QtTwitch',
     license='LGPLv3+',
     author='SirRandoo',

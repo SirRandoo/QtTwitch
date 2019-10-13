@@ -35,5 +35,6 @@ setup(
     license='LGPLv3+',
     author='SirRandoo',
     author_email='',
-    description='A PyQt5 library for Twitch.', install_requires=['PyQt5', 'python-dateutil']
+    description='A PyQt5 library for Twitch.', install_requires=['PyQt5', 'python-dateutil'],
+    dependency_links=['http://github.com/sirrandoo/QtUtilities/tarball/master#egg=package-1.0']
 )

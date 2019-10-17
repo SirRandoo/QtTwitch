@@ -40,13 +40,7 @@ logger = logging.getLogger(__name__)
 
 class Parser:
     """A class to house the IRC message parsers."""
-    PATTERN = re.compile(
-        r'(?P<tags>@(.*) )?'
-        r':(?P<prefix>\w+(?:!\w+)?(?:@\w+)?(?:\.?(?:tmi)?\.twitch\.tv)?) '
-        r'(?P<command>\w+|\d+) '
-        r'(?P<params>.*)'
-        r'\r\n'
-    )
+    PATTERN = re.compile(r'(?:@(?P<tags>.*?) )?:(?:(?P<prefix>.*?) ?) (?P<command>\w+|\d+) (?P<params>.*)')
     
     LOOKUP = {
         1: 'welcome',

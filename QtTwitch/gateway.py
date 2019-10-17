@@ -364,8 +364,8 @@ class Gateway(QtCore.QObject):
         """Disconnects the client from Twitch's IRc servers."""
         if not self._socket.isValid():
             raise ConnectionError
-        
-        self._socket.disconnect()
+
+        self._socket.close()
     
     def reconnect(self):
         """Disconnects the client from Twitch's IRC servers.  Once the client is

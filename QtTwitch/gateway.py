@@ -399,7 +399,6 @@ class Gateway(QtCore.QObject):
         if not content.endswith('\r\n'):
             content += '\r\n'
         
-        print(content)
         self._socket.sendTextMessage(content)
     
     def send_priv_message(self, channel: str, content: str):

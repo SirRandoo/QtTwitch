@@ -328,7 +328,7 @@ class Gateway(QtCore.QObject):
             
             # Join channels
             for channel in self.channels:
-                self.join(channel)
+                self.send_raw_message(f'JOIN #{channel}')
         
         else:
             logger.warning("Could not connect to Twitch's IRC servers!")
